@@ -8,12 +8,12 @@ run("Initialize ");
 
 <button>
 label=Abrir
-icon=MicroscopyToolBar/open.gif
+icon=open.gif
 arg=run("Open ");
 
 <button>
 label=Guardar
-icon=MicroscopyToolBar/save.gif
+icon=save.gif
 arg=run("Save ");
 
 <separator>
@@ -22,50 +22,50 @@ arg=run("Save ");
 
 <button>
 label=Herramienta rectangulo
-icon=MicroscopyToolBar/rectangle.gif
+icon=rectangle.gif
 arg=setTool("rectangle");
 
 <button>
 label=Herramienta circulo
-icon=MicroscopyToolBar/circle.gif
+icon=circle.gif
 arg=setTool("oval");
 
 <button>
 label=Herramienta poligono
-icon=MicroscopyToolBar/polygon.gif
+icon=polygon.gif
 arg=setTool("polygon");
 
 <button>
 label=Herramienta flecha
-icon=MicroscopyToolBar/arrow.gif
+icon=arrow.gif
 arg=setTool("arrow");
 
 <button>
 label=Herramienta punto
-icon=MicroscopyToolBar/point.gif
+icon=point.gif
 arg=setTool("point");
 
 <button>
 label=Herramienta multipuntos
-icon=MicroscopyToolBar/multipoints.gif
+icon=multipoints.gif
 arg=setTool("multipoint");
 
 <separator>
 
 <button>
 label=Ampliar
-icon=MicroscopyToolBar/zoomIn.gif
+icon=zoomIn.gif
 arg=run("ZoomIn ");
 //arg=setTool("zoom");
 
 <button>
 label=Reducir
-icon=MicroscopyToolBar/zoomOut.gif
+icon=zoomOut.gif
 arg=run("ZoomOut ");
 
 <button>
 label=Herramienta arrastrar
-icon=MicroscopyToolBar/hand.gif
+icon=hand.gif
 arg=setTool("hand");
 
 <separator>
@@ -85,18 +85,18 @@ arg=run("ActivateCamera ");
 
 <button>
 label=Visor
-icon=MicroscopyToolBar/viewer.png
+icon=viewer.png
 arg=run("ActivateViewer ");
 
 <button>
 label=Capturar
-icon=MicroscopyToolBar/camera.png
+icon=camera.png
 arg=run("Capture ");
 
 <separator>
 
 <button>
 label=Controles Avanzados
-icon=MicroscopyToolBar/controls.png
+icon=controls.png
 arg=run("Settings ");
 </line>
