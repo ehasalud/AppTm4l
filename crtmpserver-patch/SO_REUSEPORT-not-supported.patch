@@ -1,0 +1,20 @@
+commit cf981ce3034118c6630412bb6c1ac0dee546c8e4
+Author: Mariusz Pluciński <mplucinski@speednet.pl>
+Date:   Tue Dec 10 16:48:38 2013 +0000
+
+    Do not treat as error situation when SO_REUSEPORT option is not supported
+
+diff --git a/sources/common/src/platform/linux/linuxplatform.cpp b/sources/common/src/platform/linux/linuxplatform.cpp
+index 7334c28..5198b47 100644
+--- a/sources/common/src/platform/linux/linuxplatform.cpp
++++ b/sources/common/src/platform/linux/linuxplatform.cpp
+@@ -256,7 +256,8 @@ bool setFdReuseAddress(SOCKET fd) {
+ 		return false;
+ 	}
+ #ifdef SO_REUSEPORT
+-	if (setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, (char *) & one, sizeof (one)) != 0) {
++	if (setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, (char *) & one, sizeof (one)) != 0 &&
++			errno != ENOPROTOOPT) {
+ 		FATAL("Unable to reuse port");
+ 		return false;
+ 	}

@@ -1,0 +1,44 @@
+diff --git a/builders/cmake/cmake_find_modules/Find_dl.cmake b/builders/cmake/cmake_find_modules/Find_dl.cmake
+index e3175a0..9c4e0f7 100644
+--- a/builders/cmake/cmake_find_modules/Find_dl.cmake
++++ b/builders/cmake/cmake_find_modules/Find_dl.cmake
+@@ -31,7 +31,7 @@ FIND_LIBRARY(DL_LIBRARY_PATH
+ 		/usr/lib/i386-linux-gnu
+ 		/opt/local/lib
+ 		/sw/lib
+-		NO_DEFAULT_PATH)
++		)
+ 
+ MESSAGE(STATUS "DL_INCLUDE_PATH: ${DL_INCLUDE_PATH}")
+ MESSAGE(STATUS "DL_LIBRARY_PATH: ${DL_LIBRARY_PATH}")
+diff --git a/builders/cmake/cmake_find_modules/Find_openssl.cmake b/builders/cmake/cmake_find_modules/Find_openssl.cmake
+index fb3614e..179db57 100644
+--- a/builders/cmake/cmake_find_modules/Find_openssl.cmake
++++ b/builders/cmake/cmake_find_modules/Find_openssl.cmake
+@@ -36,7 +36,7 @@ FIND_LIBRARY(OPENSSL_LIBRARY_PATH
+ 		/lib/i386-linux-gnu
+ 		/usr/lib/i386-linux-gnu
+ 		/usr/local/ssl/lib
+-		NO_DEFAULT_PATH)
++		)
+ 
+ FIND_LIBRARY(CRYPTO_LIBRARY_PATH
+ 	NAMES
+@@ -58,7 +58,7 @@ FIND_LIBRARY(CRYPTO_LIBRARY_PATH
+ 		/lib/i386-linux-gnu
+ 		/usr/lib/i386-linux-gnu
+ 		/usr/local/ssl/lib
+-		NO_DEFAULT_PATH)
++		)
+ 
+ IF($ENV{COMPILE_STATIC} MATCHES "1")
+ 	FIND_LIBRARY(Z_LIBRARY_PATH
+@@ -80,7 +80,7 @@ IF($ENV{COMPILE_STATIC} MATCHES "1")
+ 			/lib/i386-linux-gnu
+ 			/usr/lib/i386-linux-gnu
+ 			/usr/local/ssl/lib
+-			NO_DEFAULT_PATH)
++			)
+ 	SET(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES_OLD})
+ ELSEIF($ENV{COMPILE_STATIC} MATCHES "1")
+ 	SET(Z_LIBRARY_PATH "")

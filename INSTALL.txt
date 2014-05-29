@@ -1,0 +1,118 @@
+***INSTALLATION***
+
+This document is an step-by-step guide to correctly install AppTm4l in a Linux-based device. This AppTm4l folder must contain, at least, the following elements:
+- crtmpserver (empty dir)
+- crtmpserver-patch (dir)
+- macros (dir)
+- plugins (dir)
+- web (dir)
+- AppTm4l.properties
+- AppTm4l.sh
+- crtmpserver.lua
+- ij.jar
+
+The execution of AppTm4l relies on some other programs that must be previously installed on the system. These programs and libraries are: libv4l, v4l4j, ffmpeg (with x264 and yasm) and crtmpserver. Now, we will explain how to install each of these programs.
+
+
+***libv4l***
+This API provides access to the camera. Typically it is already installed in most common Linux distributions, but it may be necessary to manually install it if it doesn't work properly. The installation is very simple:
+
+# Firs, download the package from the repo
+$ git clone git://git.debian.org/git/collab-maint/libv4l.git
+
+# Move to the directory, compile and install
+$ cd libv4l
+$ ./configure
+$ make
+$ sudo make install
+
+
+***v4l4vj***
+This Java package provides access to the camera directly from Java code by using libv4l API. The installation of this package is well explained in this link (https://code.google.com/p/v4l4j/wiki/GettingStarted). In particular, the installation for ARM platforms such as Odroid-U3 is:
+
+# First, install Java 7, ant and some other packages
+$ sudo apt-get install openjdk-7-jdk ant libjpeg8-dev libv4l-dev subversion
+
+# Download the files
+$ svn co http://v4l4j.googlecode.com/svn/v4l4j/trunk v4l4j-trunk
+$ cd v4l4j-trunk
+
+# Build and install
+$ export JDK_HOME=/usr/lib/jvm/java-7-openjdk-armhf/
+$ ant clean all
+$ sudo ant install
+
+
+***FFMPEG***
+It is necessary to install the original FFMPEG (with x264 enabled), and not Libav. Some Linux distributions come with Libav by default, and this can be noticed by executing the command "ffmpeg" in a terminal: if the first line shows something like "Libav developers", Libav is installed instead of FFMPEG.
+The steps to install FFMPEG from scratch can be found in (https://trac.ffmpeg.org/wiki/UbuntuCompilationGuide). It is not necessary to install all the packages, only the ones below:
+
+# YASM
+$ cd ~/ffmpeg_sources
+$ wget http://www.tortall.net/projects/yasm/releases/yasm-1.2.0.tar.gz
+$ tar xzvf yasm-1.2.0.tar.gz
+$ cd yasm-1.2.0
+$ ./configure
+$ make
+$ sudo make install
+$ make distclean
+$ . ~/.profile
+
+# x264
+$ cd ~/ffmpeg_sources
+$ git clone --depth 1 git://git.videolan.org/x264.git
+$ cd x264
+$ ./configure --enable-static
+$ make
+$ sudo make install
+$ make distclean
+
+# FFMPEG
+$ cd ~/ffmpeg_sources
+$ git clone --depth 1 git://source.ffmpeg.org/ffmpeg
+$ cd ffmpeg
+$ ./configure --extra-libs="-ldl" --enable-gpl --enable-libass --enable-libtheora --enable-libvorbis --enable-libx264 --enable-nonfree --enable-x11grab
+$ make
+$ sudo make install
+$ make distclean
+$ hash -r
+$ . ~/.profile
+
+
+***Crtmpserver***
+The last component is the RTMP server. Its compilation in ARM platforms (at least, Odroid-U3) requires to patch some files, as explained later (probed on crtmpversion 1.1_rc1 Gladiator).
+
+# First, install some packages required by Crtmpserver
+$ sudo apt-get install g++ subversion cmake make libssl-dev
+
+# Fetch the latest repo version
+$ cd ~
+$ svn co --username anonymous --password "" https://svn.rtmpd.com/crtmpserver/trunk crtmpserver
+$ cd crtmpserver/builders/cmake/
+$ COMPILE_STATIC=1 cmake -DCMAKE_BUILD_TYPE=Release .
+$ make
+
+If the compilation fails and it is an ARM platform, it may be necessary to patch crtmpserver. The patch files are located under the "crtmpserver-patch" folder.
+
+# First, come back to the root directory of crtmpserver
+$ cd ~/crtmpserver
+
+# From there, patch crtmpserver
+$ patch -p1 < {path_to_AppTm4l_directory}/crtmpserver-patch/DELETE_NO_DEFAULT_PATH.patch
+$ patch -p1 < {path_to_AppTm4l_directory}/crtmpserver-patch/SO_REUSEPORT-not-supported.patch
+
+After that, crtmpserver should compile correctly. Go to cmake directory and build again.
+$ cd ~/crtmpserver/builders/cmake/
+$ COMPILE_STATIC=1 cmake -DCMAKE_BUILD_TYPE=Release .
+$ make
+
+The last step is to copy crtmpserver executable file to a directory contained in the $PATH, so that crtmpserver could be accessed directly from the command line. Here, we are coping the file to "/usr/local/bin"
+
+$ sudo cp ~/crtmpserver/builders/cmake/crtmpserver/crtmpserver /usr/local/bin
+
+We can check if it is correctly installed by executing crtmpserver from a command line and using crtmpserver.lua as configuration file:
+
+$ crtmpserver {path_to_AppTm4l_directory}/crtmpserver.lua
+
+If an IP table appears in the terminal, AppTm4l is ready!
+
