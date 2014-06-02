@@ -11,10 +11,18 @@ This document is an step-by-step guide to correctly install AppTm4l in a Linux-b
 - crtmpserver.lua
 - ij.jar
 
-The execution of AppTm4l relies on some other programs that must be previously installed on the system. These programs and libraries are: libv4l, v4l4j, ffmpeg (with x264 and yasm) and crtmpserver. Now, we will explain how to install each of these programs.
+The execution of AppTm4l relies on some other programs that must be previously installed on the system. These programs and libraries are: 
+
+1. libv4l
+2. v4l4j
+3. ffmpeg (with x264 and yasm)
+4. crtmpserver
+5. mutt (optional)
+
+Now, we will explain how to install each of these programs.
 
 
-***libv4l***
+1. ***libv4l***
 This API provides access to the camera. Typically it is already installed in most common Linux distributions, but it may be necessary to manually install it if it doesn't work properly. The installation is very simple:
 
 # Firs, download the package from the repo
@@ -27,7 +35,7 @@ $ make
 $ sudo make install
 
 
-***v4l4vj***
+2. ***v4l4vj***
 This Java package provides access to the camera directly from Java code by using libv4l API. The installation of this package is well explained in this link (https://code.google.com/p/v4l4j/wiki/GettingStarted). In particular, the installation for ARM platforms such as Odroid-U3 is:
 
 # First, install Java 7, ant and some other packages
@@ -43,7 +51,7 @@ $ ant clean all
 $ sudo ant install
 
 
-***FFMPEG***
+3. ***FFMPEG***
 It is necessary to install the original FFMPEG (with x264 enabled), and not Libav. Some Linux distributions come with Libav by default, and this can be noticed by executing the command "ffmpeg" in a terminal: if the first line shows something like "Libav developers", Libav is installed instead of FFMPEG.
 The steps to install FFMPEG from scratch can be found in (https://trac.ffmpeg.org/wiki/UbuntuCompilationGuide). It is not necessary to install all the packages, only the ones below:
 
@@ -79,8 +87,8 @@ $ hash -r
 $ . ~/.profile
 
 
-***Crtmpserver***
-The last component is the RTMP server. Its compilation in ARM platforms (at least, Odroid-U3) requires to patch some files, as explained later (probed on crtmpversion 1.1_rc1 Gladiator).
+4. ***Crtmpserver***
+Crtmpserver is an open-source RTMP server. Its compilation in ARM platforms (at least, Odroid-U3) requires to patch some files, as explained later (probed on crtmpversion 1.1_rc1 Gladiator).
 
 # First, install some packages required by Crtmpserver
 $ sudo apt-get install g++ subversion cmake make libssl-dev
@@ -114,5 +122,16 @@ We can check if it is correctly installed by executing crtmpserver from a comman
 
 $ crtmpserver {path_to_AppTm4l_directory}/crtmpserver.lua
 
-If an IP table appears in the terminal, AppTm4l is ready!
+If an IP table appears in the terminal, crtmpserver is correctly installed.
+
+
+5. ***mutt***
+Finally, if you want AppTm4l to send the logs automatically via email, you need to install mutt. This program can be found in the repositories of the most common Linux distributions, so the installation is as simple as:
+
+$ sudo apt-get install mutt
+
+You will be prompted to choose a Postfix configuration. Select "Internet site" and introduce a name that identifies you.
+
+
+After that, AppTm4l is ready!
 
