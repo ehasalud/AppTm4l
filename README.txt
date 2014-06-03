@@ -30,7 +30,7 @@ Components:
 
 - plugins/ActionBar/AppTm4l_toolbar.txt: This file describes the toolbar for AppTm4l. It is called from the macro AppTm4l.ijm.
 
-- plugins/Plugin_Telemicroscopia.jar: This jar file contains all the classes related to the microscope video: capture, streaming, web server, etc.
+- plugins/telemicroscopy_plugin.jar: This jar file contains all the classes related to the microscope video: capture, streaming, web server, etc.
 
 - web: This directory contains the flash player.
 

@@ -62,8 +62,8 @@ configuration=
 				{
 					ip="0.0.0.0",
 					port=10000,
-					localStreamName="nwolrafurkdxwahykhna",
-					targetStreamName="nwolrafurkdxwahykhna",
+					localStreamName="pwxioponvnuusyyajmfo",
+					targetStreamName="pwxioponvnuusyyajmfo",
 					protocol="inboundUdpTs"
 				},
 			},

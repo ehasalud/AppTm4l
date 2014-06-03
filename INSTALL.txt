@@ -1,11 +1,10 @@
 ***INSTALLATION***
 
 This document is an step-by-step guide to correctly install AppTm4l in a Linux-based device. This AppTm4l folder must contain, at least, the following elements:
-- crtmpserver (empty dir)
-- crtmpserver-patch (dir)
 - macros (dir)
 - plugins (dir)
 - web (dir)
+- crtmpserver-patch (dir)
 - AppTm4l.properties
 - AppTm4l.sh
 - crtmpserver.lua
