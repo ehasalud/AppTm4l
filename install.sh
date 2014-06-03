@@ -7,7 +7,7 @@ AppTm4ldir=$(readlink -f $(dirname $0))
 read -s -p "Enter your sudo password and press enter: " password
 
 # Install all required programs
-required="git ant subversion make cmake openjdk-7-jdk libjpeg8-dev build-essential libssl-dev g++ patch"
+required="git ant subversion make cmake openjdk-7-jdk libjpeg8-dev build-essential libssl-dev g++ patch libsdl1.2-dev"
 echo $password | sudo -S apt-get install -y $required
 
 # Move to home directory and create a temp directory
@@ -61,10 +61,9 @@ cd $AppTm4ltemp
 ffmpegtemp=$AppTm4ltemp/ffmpeg_sources
 mkdir $ffmpegtemp
 
+# YASM
 printf "\n"
 echo "Installing YASM"
-
-# YASM
 cd $ffmpegtemp
 wget http://www.tortall.net/projects/yasm/releases/yasm-1.2.0.tar.gz
 tar xzvf yasm-1.2.0.tar.gz
@@ -76,6 +75,8 @@ make distclean
 . ~/.profile
 
 # x264
+printf "\n"
+echo "Installing x264"
 cd $ffmpegtemp
 git clone --depth 1 git://git.videolan.org/x264.git
 cd x264
@@ -85,10 +86,12 @@ echo $password | sudo -S make install
 make distclean
 
 # Ffmpeg
+printf "\n"
+echo "Installing Ffmpeg"
 cd $ffmpegtemp
 git clone --depth 1 git://source.ffmpeg.org/ffmpeg
 cd ffmpeg
-./configure --extra-libs="-ldl" --enable-gpl --enable-libass --enable-libtheora --enable-libvorbis --enable-libx264 --enable-nonfree --enable-x11grab
+./configure --extra-libs="-ldl" --enable-gpl --enable-libx264 --enable-nonfree
 make
 echo $password | sudo -S make install
 make distclean
@@ -108,7 +111,8 @@ cd crtmpserver
 machine=$(uname -m)
 if [[ $machine == *arm* ]]; then
 	# Path the files
-	echo "Patching the crmtpsever files"
+	printf "\n"
+	echo "It is an ARM platform. Patching the crmtpsever files"
 	for i in $AppTm4ldir/crtmpserver-patch/*.patch; do
 		patch -p1 < $i
 	done
@@ -120,4 +124,16 @@ COMPILE_STATIC=1 cmake -DCMAKE_BUILD_TYPE=Release .
 make
 
 # Copy the executable to a directory in the path
+printf "\n"
+echo "Copying the executable file of crtmpserver"
 echo $password | sudo -S cp crtmpserver/crtmpserver /usr/local/bin
+
+
+### Installation of mutt/postfix ###
+printf "\n\n"
+echo "Installing mutt/postfix"
+
+echo $password | sudo -S debconf-set-selections -v <<< "postfix postfix/main_mailer_type select Internet Site"
+echo $password | sudo -S debconf-set-selections -v <<< "postfix postfix/mailname string `hostname`"
+
+echo $password | sudo -S apt-get install -y mutt
