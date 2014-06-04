@@ -13,7 +13,7 @@ All software used in this application is open-source and is compatible with GNU 
 
 
 Installation:
-The installation of AppTm4l is explained in INSTALL.txt. It is required to install some programs before executing the application.
+The installation of AppTm4l is explained in INSTALL.txt. It is required to install some programs before executing the application. There are two ways to install them: automatically (by running a script) or manually.
 
 
 Execution:

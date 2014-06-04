@@ -18,7 +18,11 @@ The execution of AppTm4l relies on some other programs that must be previously i
 4. crtmpserver
 5. mutt (optional)
 
-Now, we will explain how to install each of these programs.
+There are two ways to get all the components installed:
+
+- Automatically by running a script: the script is named "install.sh", and automatically installs all the required components. The script performs a very light validation of the previous state of the programs, so if you usually use any of them (libv4l, v4l4j, ffmpeg, crtmpserver, mutt) the script may crash your configuration. In that case, it is recommended to manually install them, as explained later.
+
+- Manually. Manual installation allows you to have a deeper control over the configuration of each program and figure out dependency issues. The instructions are below:
 
 
 1. ***libv4l***
