@@ -7,7 +7,7 @@ AppTm4ldir=$(readlink -f $(dirname $0))
 read -s -p "Enter your sudo password and press enter: " password
 
 # Install all required programs
-required="git ant subversion make cmake openjdk-7-jdk libjpeg8-dev build-essential libssl-dev g++ patch libsdl1.2-dev"
+required="git ant subversion make cmake libjpeg8-dev build-essential libssl-dev g++ patch libsdl1.2-dev"
 echo $password | sudo -S apt-get update
 echo $password | sudo -S apt-get install -y $required
 
@@ -48,8 +48,22 @@ svn co http://v4l4j.googlecode.com/svn/v4l4j/trunk v4l4j-trunk
 cd v4l4j-trunk
 
 # Build and install
+
+java_version=$(javac -version 2>&1)
+
+if [[ $java_version == *1.6* ]]; then
+	# Uninstall openjdk 6. We need version 7 at least.
+	echo $password | sudo -S apt-get remove -y openjdk-6-*
+fi
+
+if [[ $java_version == *1.7* || $java_version == *1.8* ]]; then
+	echo "A valid Java version is already installed"
+else
+	echo $password | sudo -S apt-get install -y openjdk-7-jdk
+fi
+
 # First, get the path to java and export it
-javapath=$(readlink -f $(which java) | awk '{split($0,a,"jre"); print a[1]}')
+javapath=$(readlink -f $(which javac) | awk '{split($0,a,"bin"); print a[1]}')
 export JDK_HOME=$javapath
 ant clean all
 echo $password | sudo -S ant install
@@ -65,7 +79,7 @@ ffmpeg_valid=false
 
 output=$(ffmpeg -version)
 
-if [[ ${#output} > 0 ]]; then
+if [[ ${#output_ffmpeg} > 0 ]]; then
 	# Ffmpeg is present
 	ffmpeg_present=true
 	
@@ -84,7 +98,7 @@ else
 		# It is needed to uninstall
 		printf "\n"
 		echo "Uninstalling old ffmpeg..."
-		echo $password | sudo -S apt-get purge ffmpeg
+		echo $password | sudo -S apt-get purge -y ffmpeg
 	fi
 
 	# Installing new ffmpeg
