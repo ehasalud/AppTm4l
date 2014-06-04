@@ -8,6 +8,7 @@ read -s -p "Enter your sudo password and press enter: " password
 
 # Install all required programs
 required="git ant subversion make cmake openjdk-7-jdk libjpeg8-dev build-essential libssl-dev g++ patch libsdl1.2-dev"
+echo $password | sudo -S apt-get update
 echo $password | sudo -S apt-get install -y $required
 
 # Move to home directory and create a temp directory
@@ -57,47 +58,81 @@ echo $password | sudo -S ant install
 ### Installation of Ffmpeg ###
 printf "\n\n"
 echo "Installing Ffmpeg"
-cd $AppTm4ltemp
-ffmpegtemp=$AppTm4ltemp/ffmpeg_sources
-mkdir $ffmpegtemp
+echo "Checking if Ffmpeg is present and meets the requirements"
 
-# YASM
-printf "\n"
-echo "Installing YASM"
-cd $ffmpegtemp
-wget http://www.tortall.net/projects/yasm/releases/yasm-1.2.0.tar.gz
-tar xzvf yasm-1.2.0.tar.gz
-cd yasm-1.2.0
-./configure
-make
-echo $password | sudo -S make install
-make distclean
-. ~/.profile
+ffmpeg_present=false
+ffmpeg_valid=false
 
-# x264
-printf "\n"
-echo "Installing x264"
-cd $ffmpegtemp
-git clone --depth 1 git://git.videolan.org/x264.git
-cd x264
-./configure --enable-static
-make
-echo $password | sudo -S make install
-make distclean
+output=$(ffmpeg -version)
 
-# Ffmpeg
-printf "\n"
-echo "Installing Ffmpeg"
-cd $ffmpegtemp
-git clone --depth 1 git://source.ffmpeg.org/ffmpeg
-cd ffmpeg
-./configure --extra-libs="-ldl" --enable-gpl --enable-libx264 --enable-nonfree
-make
-echo $password | sudo -S make install
-make distclean
-hash -r
-. ~/.profile
+if [[ ${#output} > 0 ]]; then
+	# Ffmpeg is present
+	ffmpeg_present=true
+	
+	# Check if contains the required dependencies
+	if [[ $output == *ffmpeg* && $output == *libx264* && $output == *enable-ffplay* ]]; then
+		ffmpeg_valid=true
+	fi
+fi
 
+if [[ "$ffmpeg_present" = true && "$ffmpeg_valid" = true ]]; then
+	# Do nothing
+	printf "\n"
+	echo "Ffmpeg is already installed. Do nothing."
+else
+	if [[ "$ffmpeg_present" = true ]]; then
+		# It is needed to uninstall
+		printf "\n"
+		echo "Uninstalling old ffmpeg..."
+		echo $password | sudo -S apt-get purge ffmpeg
+	fi
+
+	# Installing new ffmpeg
+	printf "\n"
+	echo "Installing new ffmpeg..."
+
+	cd $AppTm4ltemp
+	ffmpegtemp=$AppTm4ltemp/ffmpeg_sources
+	mkdir $ffmpegtemp
+
+	# YASM
+	printf "\n"
+	echo "Installing YASM"
+	cd $ffmpegtemp
+	wget http://www.tortall.net/projects/yasm/releases/yasm-1.2.0.tar.gz
+	tar xzvf yasm-1.2.0.tar.gz
+	cd yasm-1.2.0
+	./configure
+	make
+	echo $password | sudo -S make install
+	make distclean
+	. ~/.profile
+
+	# x264
+	printf "\n"
+	echo "Installing x264"
+	cd $ffmpegtemp
+	git clone --depth 1 git://git.videolan.org/x264.git
+	cd x264
+	./configure --enable-static
+	make
+	echo $password | sudo -S make install
+	make distclean
+
+	# Ffmpeg
+	printf "\n"
+	echo "Installing Ffmpeg"
+	cd $ffmpegtemp
+	git clone --depth 1 git://source.ffmpeg.org/ffmpeg
+	cd ffmpeg
+	./configure --extra-libs="-ldl" --enable-gpl --enable-libx264 --enable-nonfree
+	make
+	echo $password | sudo -S make install
+	make distclean
+	hash -r
+	. ~/.profile
+
+fi
 
 ### Installation of crtmpserver ###
 printf "\n\n"
