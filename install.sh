@@ -77,14 +77,15 @@ echo "Checking if Ffmpeg is present and meets the requirements"
 ffmpeg_present=false
 ffmpeg_valid=false
 
-output=$(ffmpeg -version)
+output_ffmpeg=$(ffmpeg -version)
+output_ffplay=$(ffplay -version)
 
 if [[ ${#output_ffmpeg} > 0 ]]; then
 	# Ffmpeg is present
 	ffmpeg_present=true
 	
 	# Check if contains the required dependencies
-	if [[ $output == *ffmpeg* && $output == *libx264* && $output == *enable-ffplay* ]]; then
+	if [[ $output_ffmpeg == *ffmpeg* && $output_ffmpeg == *libx264* && ${#output_ffplay} > 0 ]]; then
 		ffmpeg_valid=true
 	fi
 fi
